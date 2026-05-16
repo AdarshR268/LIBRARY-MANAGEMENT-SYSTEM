@@ -1,0 +1,200 @@
+{% extends 'navadmin.html' %}
+
+{% block title %} Pending Approvals {% endblock %}
+
+{% block content %}
+
+<style>
+
+    .approval-container{
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+
+    .approval-card{
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        border: none;
+        overflow: hidden;
+    }
+
+    .approval-header{
+        padding-top: 30px;
+        padding-bottom: 10px;
+        background: #ffffff;
+    }
+
+    .approval-title{
+        text-align: center;
+        font-weight: bold;
+        color: #212529;
+        margin-bottom: 0;
+    }
+
+    .approval-body{
+        padding: 25px;
+    }
+
+    .approval-table{
+        margin-bottom: 0;
+    }
+
+    .approval-table thead{
+        background-color: #f8f9fa;
+    }
+
+    .approval-table th{
+        font-weight: 600;
+        color: #212529;
+        border-top: none;
+        padding: 14px;
+    }
+
+    .approval-table td{
+        vertical-align: middle;
+        padding: 14px;
+        color: #495057;
+    }
+
+    .user-name{
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .approve-btn{
+        padding: 6px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .status-btn{
+        padding: 6px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .custom-alert{
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+</style>
+
+<div class="container approval-container">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-10">
+
+            {% if messages %}
+            <div class="alert alert-info alert-dismissible fade show custom-alert" role="alert">
+
+                <button type="button" class="close" data-dismiss="alert">
+                    &times;
+                </button>
+
+                {% for message in messages %}
+                    {{ message }}<br>
+                {% endfor %}
+
+            </div>
+            {% endif %}
+
+            <div class="approval-card">
+
+                <div class="approval-header">
+                    <h3 class="approval-title">
+                        Approve / Disapprove Users
+                    </h3>
+                </div>
+
+                <div class="approval-body">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover text-center align-middle approval-table">
+
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for u in user %}
+
+                                <tr>
+
+                                    <td class="user-name">
+                                        {{u.first_name}} {{u.last_name}}
+                                    </td>
+
+                                    <td>
+                                        {{u.email}}
+                                    </td>
+
+                                    <td>
+
+                                        {% if u.status == 0 %}
+
+                                        <a href="{% url 'approve' u.id %}"
+                                           class="btn btn-success btn-sm approve-btn">
+                                            Approve
+                                        </a>
+
+                                        <a href="{% url 'disapprove' u.id %}"
+                                           class="btn btn-danger btn-sm approve-btn">
+                                            Disapprove
+                                        </a>
+
+                                        {% endif %}
+
+                                        {% if u.status == 1 %}
+
+                                        <button type="button"
+                                                class="btn btn-outline-success btn-sm status-btn"
+                                                disabled>
+                                            Approved
+                                        </button>
+
+                                        {% endif %}
+
+                                        {% if u.status == 2 %}
+
+                                        <button type="button"
+                                                class="btn btn-outline-danger btn-sm status-btn"
+                                                disabled>
+                                            Disapproved
+                                        </button>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

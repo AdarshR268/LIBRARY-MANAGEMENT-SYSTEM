@@ -1,0 +1,148 @@
+{% extends 'navadmin.html' %}
+
+{% block title %} Admin - Add Book {% endblock %}
+
+{% block content %}
+
+<style>
+
+    .add-book-container{
+        max-width: 600px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .page-title{
+        text-align: center;
+        font-weight: bold;
+        color: #212529;
+        margin-bottom: 30px;
+    }
+
+    .book-form{
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .book-form label{
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #212529;
+    }
+
+    .book-form .form-control{
+        border-radius: 8px;
+        padding: 10px 12px;
+        border: 1px solid #ced4da;
+        box-shadow: none;
+        transition: 0.3s;
+    }
+
+    .book-form .form-control:focus{
+        border-color: #212529;
+        box-shadow: 0 0 5px rgba(0,0,0,0.15);
+    }
+
+    .submit-btn{
+        background-color: #212529;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        width: 100%;
+        transition: 0.3s;
+    }
+
+    .submit-btn:hover{
+        background-color: #000000;
+    }
+
+    .custom-alert{
+        margin-top: 20px;
+        text-align: center;
+        border-radius: 8px;
+    }
+
+</style>
+
+<div class="container add-book-container">
+
+    <h2 class="page-title">Add New Book</h2>
+
+    <div class="book-form">
+
+        <form action="{% url 'add_book' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            
+            <div class="form-group mb-3">
+                <label for="title">Book Title</label>
+                <input type="text" id="title" class="form-control" name="title" required>
+            </div>
+
+            <div class="row">
+
+                
+                <div class="col-md-6 form-group mb-3">
+                    <label for="author">Author</label>
+                    <input type="text" id="author" class="form-control" name="author" required>
+                </div>
+
+                
+                <div class="col-md-6 form-group mb-3">
+                    <label for="publisher">Publisher</label>
+                    <input type="text" id="publisher" class="form-control" name="publisher" required>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                
+                <div class="col-md-6 form-group mb-3">
+                    <label for="price">Price (₹)</label>
+                    <input type="number" step="0.01" id="price" class="form-control" name="price" required min="0">
+                </div>
+
+                
+                <div class="col-md-6 form-group mb-3">
+                    <label for="stock">Stock Quantity</label>
+                    <input type="number" id="stock" class="form-control" name="stock" required min="0">
+                </div>
+
+            </div>
+
+            
+            <div class="form-group mb-3">
+                <label for="description">Description</label>
+                <textarea id="description" class="form-control" name="description" rows="3" required></textarea>
+            </div>
+
+           
+            <div class="form-group mb-3">
+                <label for="cover_image">Book Cover Image</label>
+                <input type="file" id="cover_image" class="form-control" name="cover_image" accept="image/*" required>
+            </div>
+
+            <button type="submit" class="submit-btn mt-4">
+                Add Book
+            </button>
+
+        </form>
+
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info custom-alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+</div>
+
+{% endblock %}

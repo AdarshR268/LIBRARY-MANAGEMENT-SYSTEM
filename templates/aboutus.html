@@ -1,0 +1,166 @@
+{% extends 'navbar.html' %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .about-section{
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .about-title{
+        font-weight: bold;
+        color: #212529;
+    }
+
+    .about-subtitle{
+        color: #6c757d;
+        font-size: 16px;
+    }
+
+    .about-heading{
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #212529;
+    }
+
+    .about-text{
+        color: #6c757d;
+        line-height: 1.8;
+        font-size: 15px;
+    }
+
+    .team-card{
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        padding: 20px;
+        border-radius: 10px;
+        background: #fff;
+        transition: 0.3s;
+        height: 100%;
+    }
+
+    .team-card:hover{
+        transform: translateY(-5px);
+    }
+
+    .team-image{
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: auto;
+        display: block;
+    }
+
+    .team-name{
+        font-weight: bold;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        color: #212529;
+    }
+
+    .team-role{
+        color: #6c757d;
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+
+</style>
+
+<div class="container about-section">
+
+   
+    <div class="text-center mb-5">
+        <h2 class="about-title">About Library Management System</h2>
+        <p class="about-subtitle">
+            Empowering knowledge through seamless digital organization
+        </p>
+    </div>
+
+   
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10 col-md-11">
+
+            <h4 class="about-heading">Who We Are</h4>
+
+            <p class="about-text">
+                Our Library Management System is built on a fundamental belief —
+                that access to knowledge should be effortless, organized, and
+                available to everyone. We provide a comprehensive platform that
+                bridges the gap between readers and resources, from classic
+                literature to the latest academic research.
+            </p>
+
+            <p class="about-text">
+                Our goal is to modernize the library experience by offering
+                powerful search tools, efficient rental tracking, and automated
+                fine management. Whether you are a student, a researcher, or a
+                casual reader, we are dedicated to making your journey through
+                the world of books smooth and productive.
+            </p>
+
+        </div>
+    </div>
+
+    
+    <div class="text-center mb-4">
+        <h3 class="about-title">Our Curators</h3>
+        <p class="about-subtitle">
+            The innovators behind the system
+        </p>
+    </div>
+
+   
+    <div class="row text-center">
+
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="team-card">
+
+                <img src="/static/images/team1.jpg"
+                     alt="Ajin Lal"
+                     class="team-image">
+
+                <h5 class="team-name">Ajin Lal</h5>
+                <p class="team-role">Project Architect</p>
+
+            </div>
+        </div>
+
+       
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="team-card">
+
+                <img src="/static/images/team2.jpg"
+                     alt="Sneha K"
+                     class="team-image">
+
+                <h5 class="team-name">Sneha K</h5>
+                <p class="team-role">Database Administrator</p>
+
+            </div>
+        </div>
+
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="team-card">
+
+                <img src="/static/images/team3.jpg"
+                     alt="Amal Raj"
+                     class="team-image">
+
+                <h5 class="team-name">Amal Raj</h5>
+                <p class="team-role">Frontend Developer</p>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

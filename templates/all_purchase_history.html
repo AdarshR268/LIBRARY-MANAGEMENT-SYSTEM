@@ -1,0 +1,197 @@
+{% extends 'navadmin.html' %}
+
+{% block title %} All Purchase History {% endblock %}
+
+{% block content %}
+
+<style>
+
+    body{
+        background:#f4f7f6;
+    }
+
+    .history-container{
+        margin-top:40px;
+        margin-bottom:40px;
+    }
+
+    .page-title{
+        font-size:32px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:25px;
+    }
+
+    .history-card{
+        border:none;
+        border-radius:12px;
+        overflow:hidden;
+        background:#ffffff;
+        box-shadow:0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .history-card .card-body{
+        padding:25px;
+    }
+
+    .custom-table thead{
+        background:#0f172a;
+        color:#ffffff;
+    }
+
+    .custom-table th{
+        border:none;
+        padding:14px;
+        font-size:14px;
+        font-weight:600;
+    }
+
+    .custom-table td{
+        padding:14px;
+        vertical-align:middle;
+        border-color:#e5e7eb;
+        font-size:14px;
+    }
+
+</style>
+
+<div class="container history-container">
+
+    <h3 class="page-title">
+        All Users Purchase History
+    </h3>
+
+    <div class="card history-card mb-4">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="row g-3">
+
+                    <div class="col-md-9">
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Search by username or book name..."
+                            value="{{ search|default:'' }}"
+                        >
+
+                    </div>
+
+                    <div class="col-md-3 d-grid gap-2 d-md-flex">
+
+                        <button
+                            type="submit"
+                            class="btn btn-dark w-100"
+                        >
+                            Search
+                        </button>
+
+                        <a
+                            href="{% url 'all_purchase_history' %}"
+                            class="btn btn-secondary w-100"
+                        >
+                            Reset
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <div class="card history-card">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table custom-table text-center">
+
+                    <thead>
+
+                        <tr>
+                            <th>User</th>
+                            <th>Order ID</th>
+                            <th>Book</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Order Date</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in order_items %}
+
+                        <tr>
+
+                            <td>
+                                {{ item.order.user.username }}
+                            </td>
+
+                            <td>
+                                #{{ item.order.id }}
+                            </td>
+
+                            <td>
+                                {{ item.book.title }}
+                            </td>
+
+                            <td>
+                                {{ item.quantity }}
+                            </td>
+
+                            <td>
+                                ₹{{ item.price }}
+                            </td>
+
+                            <td>
+                                ₹{{ item.order.total_amount }}
+                            </td>
+
+                            <td>
+                                {{ item.order.status }}
+                            </td>
+
+                            <td>
+                                {{ item.order.created_at }}
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="8">
+                                No purchase history found
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

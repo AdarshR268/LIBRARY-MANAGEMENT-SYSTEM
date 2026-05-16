@@ -1,0 +1,202 @@
+{% extends 'navcustm.html' %}
+
+{% block title %} Notifications {% endblock %}
+
+{% block content %}
+
+<style>
+
+    body{
+        background:#f4f7f6;
+    }
+
+    .notification-container{
+        margin-top:40px;
+        margin-bottom:40px;
+    }
+
+    .page-title{
+        font-size:32px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:25px;
+    }
+
+    .notification-card{
+        border:none;
+        border-radius:12px;
+        background:#ffffff;
+        box-shadow:0 4px 14px rgba(0,0,0,0.08);
+        margin-bottom:20px;
+        overflow:hidden;
+        position:relative;
+    }
+
+    .notification-card .card-body{
+        padding:25px;
+    }
+
+    .alert-title{
+        font-size:18px;
+        font-weight:700;
+        color:#dc2626;
+        margin-bottom:15px;
+    }
+
+    .details-text{
+        font-size:15px;
+        color:#374151;
+        margin-bottom:10px;
+    }
+
+    .book-name{
+        font-weight:700;
+        color:#0f172a;
+    }
+
+    .due-date{
+        font-weight:700;
+        color:#dc2626;
+    }
+
+    .view-btn{
+        margin-top:10px;
+    }
+
+    .close-btn{
+        position:absolute;
+        top:15px;
+        right:15px;
+        border:none;
+        background:none;
+        font-size:22px;
+        font-weight:700;
+        color:#64748b;
+        cursor:pointer;
+    }
+
+    .close-btn:hover{
+        color:#dc2626;
+    }
+
+    .empty-box{
+        background:#ffffff;
+        padding:40px;
+        border-radius:12px;
+        text-align:center;
+        box-shadow:0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .empty-text{
+        font-size:18px;
+        color:#6b7280;
+        margin-bottom:0;
+    }
+
+</style>
+
+<div class="container notification-container">
+
+    <h3 class="page-title">
+        My Overdue Notifications
+    </h3>
+
+    {% if overdue_rentals %}
+
+        {% for rental in overdue_rentals %}
+
+        <div class="card notification-card">
+
+            <button class="close-btn"
+                    onclick="hideNotification({{ rental.id }})">
+
+                &times;
+
+            </button>
+
+            <div class="card-body">
+
+                <h5 class="alert-title">
+                    Overdue Rental Alert
+                </h5>
+
+                <p class="details-text">
+
+                    Book :
+                    <span class="book-name">
+                        {{ rental.book.title }}
+                    </span>
+
+                </p>
+
+                <p class="details-text">
+
+                    Due Date :
+                    <span class="due-date">
+                        {{ rental.due_date }}
+                    </span>
+
+                </p>
+
+                <p class="details-text">
+
+                    Rent Fee :
+                    ₹{{ rental.rent_fee }}
+
+                </p>
+
+                <p class="details-text">
+
+                    Current Fine :
+                    ₹{{ rental.current_fine }}
+
+                </p>
+
+                <a href="{% url 'rental_history' %}"
+                   class="btn btn-dark view-btn">
+
+                    View Rentals
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty-box">
+
+            <p class="empty-text">
+                No overdue notifications found
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+<script>
+
+    function hideNotification(rentalId){
+
+        fetch(`/hide-user-notification/${rentalId}/`)
+        .then(response => response.json())
+        .then(data => {
+
+            if(data.success){
+
+                location.reload();
+
+            }
+
+        });
+
+    }
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,372 @@
+{% extends 'navadmin.html' %}
+
+{% block title %} Admin - Book Inventory {% endblock %}
+
+{% block content %}
+
+<style>
+
+    .page-title{
+        font-size:34px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:35px;
+    }
+
+    .custom-alert{
+        border:none;
+        border-radius:12px;
+        padding:14px 18px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.06);
+        font-size:15px;
+    }
+
+    .table-wrapper{
+        background:#ffffff;
+        border-radius:18px;
+        box-shadow:0 6px 20px rgba(0,0,0,0.06);
+
+        overflow-x:auto;
+        overflow-y:hidden;
+
+        -webkit-overflow-scrolling:touch;
+        width:100%;
+    }
+
+    .custom-table{
+        margin-bottom:0;
+        min-width:950px;
+    }
+
+    .custom-table thead{
+        background:#0f172a;
+        color:#ffffff;
+    }
+
+    .custom-table thead th{
+        border:none;
+        padding:18px 14px;
+        font-size:15px;
+        font-weight:600;
+        vertical-align:middle;
+        white-space:nowrap;
+    }
+
+    .custom-table tbody td{
+        padding:18px 14px;
+        vertical-align:middle;
+        border-color:#e2e8f0;
+        font-size:15px;
+        color:#334155;
+        white-space:nowrap;
+    }
+
+    .custom-table tbody tr{
+        transition:0.3s;
+    }
+
+    .custom-table tbody tr:hover{
+        background:#f8fafc;
+    }
+
+    .book-cover{
+        width:55px;
+        height:75px;
+        object-fit:cover;
+        border-radius:8px;
+        box-shadow:0 3px 8px rgba(0,0,0,0.1);
+    }
+
+    .no-cover{
+        color:#94a3b8;
+        font-size:13px;
+    }
+
+    .book-title{
+        font-weight:600;
+        color:#0f172a;
+    }
+
+    .publisher-text{
+        color:#64748b;
+        font-size:13px;
+    }
+
+    .stock-badge{
+        padding:8px 12px;
+        border-radius:50px;
+        font-size:13px;
+        font-weight:600;
+    }
+
+    .stock-available{
+        background:#dcfce7;
+        color:#166534;
+    }
+
+    .stock-out{
+        background:#fee2e2;
+        color:#b91c1c;
+    }
+
+    .action-btn{
+        border-radius:10px;
+        font-size:14px;
+        font-weight:600;
+        padding:7px 16px;
+        transition:0.3s;
+    }
+
+    .edit-btn{
+        border:1px solid #0f172a;
+        color:#0f172a;
+        background:#ffffff;
+    }
+
+    .edit-btn:hover{
+        background:#0f172a;
+        color:#ffffff;
+    }
+
+    .delete-btn{
+        border:1px solid #dc2626;
+        color:#dc2626;
+        background:#ffffff;
+    }
+
+    .delete-btn:hover{
+        background:#dc2626;
+        color:#ffffff;
+    }
+
+    .empty-box{
+        background:#ffffff;
+        border-radius:18px;
+        padding:60px 20px;
+        text-align:center;
+        box-shadow:0 6px 18px rgba(0,0,0,0.06);
+    }
+
+    .empty-title{
+        color:#64748b;
+        font-size:24px;
+        font-weight:600;
+        margin-bottom:20px;
+    }
+
+    .add-btn{
+        background:#0f172a;
+        color:#ffffff;
+        border:none;
+        border-radius:12px;
+        padding:12px 24px;
+        font-size:15px;
+        font-weight:600;
+        transition:0.3s;
+    }
+
+    .add-btn:hover{
+        background:#1e293b;
+        color:#ffffff;
+        text-decoration:none;
+    }
+
+    @media(max-width:768px){
+
+        .page-title{
+            font-size:28px;
+        }
+
+        .custom-table thead th,
+        .custom-table tbody td{
+            font-size:14px;
+            padding:14px 10px;
+        }
+
+        .action-btn{
+            width:100%;
+            margin-bottom:6px;
+        }
+    }
+
+    @media(max-width:576px){
+
+        .page-title{
+            font-size:24px;
+        }
+
+        .book-cover{
+            width:45px;
+            height:65px;
+        }
+
+        .custom-table{
+            min-width:900px;
+        }
+    }
+
+</style>
+
+<div class="container mt-5">
+
+    {% for msg in messages %}
+        <div class="alert alert-success text-center custom-alert">
+            {{ msg }}
+        </div>
+    {% endfor %}
+
+    <h3 class="text-center page-title">
+        Book Inventory
+    </h3>
+
+    {% if books %}
+
+    <div class="table-wrapper">
+
+        <table class="table custom-table text-center">
+
+            <thead>
+                <tr>
+                    <th>Cover</th>
+                    <th>Title</th>
+                    <th>Author / Publisher</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th colspan="2">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for b in books %}
+
+                <tr>
+
+                    <td>
+
+                        {% if b.cover_image %}
+
+                            <img src="{{ b.cover_image.url }}"
+                                 class="book-cover"
+                                 alt="{{ b.title }}">
+
+                        {% else %}
+
+                            <span class="no-cover">
+                                No Cover
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td class="book-title">
+
+                        {{ b.title }}
+
+                    </td>
+
+                    <td>
+
+                        <div>
+                            {{ b.author }}
+                        </div>
+
+                        <small class="publisher-text">
+                            {{ b.publisher }}
+                        </small>
+
+                    </td>
+
+                    <td>
+
+                        ₹ {{ b.price }}
+
+                    </td>
+
+                    <td>
+
+                        {% if b.available_stock > 0 %}
+
+                            <span class="stock-badge stock-available">
+
+                                {{ b.available_stock }} in stock
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="stock-badge stock-out">
+
+                                Out of Stock
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <a href="{% url 'edit_book' b.id %}"
+                           class="btn action-btn edit-btn">
+
+                            Edit
+
+                        </a>
+
+                    </td>
+
+                    <td>
+
+                        <form action="{% url 'delete_book' b.id %}"
+                              method="POST">
+
+                            {% csrf_token %}
+
+                            <button type="submit"
+                                    class="btn action-btn delete-btn"
+                                    onclick="return confirm('Are you sure you want to delete this book?');">
+
+                                Delete
+
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-box">
+
+        <h5 class="empty-title">
+
+            No books found in the library.
+
+        </h5>
+
+        <a href="{% url 'add_book' %}"
+           class="btn add-btn">
+
+            Add Your First Book
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

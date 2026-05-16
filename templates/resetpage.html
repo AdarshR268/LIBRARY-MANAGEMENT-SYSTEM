@@ -1,0 +1,243 @@
+{% extends request.user.is_staff|yesno:"navadmin.html,navcustm.html" %}
+
+{% block title %} Reset Password {% endblock %}
+
+{% block content %}
+
+<style>
+
+
+
+    .custom-alert{
+        border:none;
+        border-radius:14px;
+        padding:15px 18px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.06);
+        font-size:15px;
+    }
+
+
+
+    .reset-card{
+        border:none;
+        border-radius:22px;
+        overflow:hidden;
+        background:#ffffff;
+        box-shadow:0 10px 28px rgba(0,0,0,0.08);
+    }
+
+    .reset-card-body{
+        padding:45px;
+    }
+
+
+
+    .reset-title{
+        font-size:34px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:35px;
+    }
+
+    .custom-label{
+        font-size:14px;
+        font-weight:600;
+        color:#64748b;
+        margin-bottom:8px;
+    }
+
+
+
+    .custom-input{
+        height:58px;
+        border-radius:14px;
+        border:1px solid #dbe3ea;
+        padding:0 18px;
+        font-size:15px;
+        transition:0.3s;
+        box-shadow:none !important;
+    }
+
+    .custom-input:focus{
+        border-color:#0f172a;
+    }
+
+    .custom-input::placeholder{
+        color:#94a3b8;
+    }
+
+
+
+    .reset-btn{
+        height:56px;
+        border:none;
+        border-radius:14px;
+        background:#0f172a;
+        color:#ffffff;
+        font-size:16px;
+        font-weight:600;
+        transition:0.3s;
+    }
+
+    .reset-btn:hover{
+        background:#1e293b;
+        color:#ffffff;
+    }
+
+
+
+    @media(max-width:768px){
+
+        .reset-card-body{
+            padding:35px 28px;
+        }
+
+        .reset-title{
+            font-size:28px;
+        }
+    }
+
+    @media(max-width:576px){
+
+        .reset-card-body{
+            padding:28px 22px;
+        }
+
+        .reset-title{
+            font-size:24px;
+        }
+
+        .custom-input{
+            height:52px;
+            font-size:14px;
+        }
+
+        .reset-btn{
+            height:52px;
+            font-size:15px;
+        }
+    }
+
+</style>
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-5 col-md-7 col-sm-10">
+
+
+
+            {% if messages %}
+
+            <div class="alert alert-danger alert-dismissible fade show custom-alert"
+                 role="alert">
+
+                <button type="button"
+                        class="close"
+                        data-dismiss="alert">
+
+                    &times;
+
+                </button>
+
+                {% for message in messages %}
+
+                    {{ message }}<br>
+
+                {% endfor %}
+
+            </div>
+
+            {% endif %}
+
+
+
+            <div class="card reset-card">
+
+                <div class="card-body reset-card-body">
+
+                    <h3 class="text-center reset-title">
+
+                        Update Password
+
+                    </h3>
+
+                    <form action="{% url 'reset_password_fun' %}"
+                          method="post">
+
+                        {% csrf_token %}
+
+
+
+                        <div class="form-group">
+
+                            <label for="currentpass" class="custom-label">
+                                Current Password
+                            </label>
+
+                            <input type="password"
+                                   id="currentpass"
+                                   class="form-control custom-input"
+                                   placeholder="Current Password"
+                                   name="currentpass"
+                                   required>
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <label for="newpass" class="custom-label">
+                                New Password
+                            </label>
+
+                            <input type="password"
+                                   id="newpass"
+                                   class="form-control custom-input"
+                                   placeholder="New Password"
+                                   name="newpass"
+                                   required>
+
+                        </div>
+
+
+
+                        <div class="form-group mb-4">
+
+                            <label for="confirmpass" class="custom-label">
+                                Confirm Password
+                            </label>
+
+                            <input type="password"
+                                   id="confirmpass"
+                                   class="form-control custom-input"
+                                   placeholder="Confirm Password"
+                                   name="confirmpass"
+                                   required>
+
+                        </div>
+
+
+
+                        <button type="submit"
+                                class="btn btn-block reset-btn">
+
+                            Reset Password
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,282 @@
+{% extends 'navadmin.html' %}
+
+{% block title %} All Rental History {% endblock %}
+
+{% block content %}
+
+<style>
+
+    body{
+        background:#f4f7f6;
+    }
+
+    .history-container{
+        margin-top:40px;
+        margin-bottom:40px;
+    }
+
+    .page-title{
+        font-size:32px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:25px;
+    }
+
+    .history-card{
+        border:none;
+        border-radius:12px;
+        overflow:hidden;
+        background:#ffffff;
+        box-shadow:0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .history-card .card-body{
+        padding:25px;
+    }
+
+    .custom-table thead{
+        background:#0f172a;
+        color:#ffffff;
+    }
+
+    .custom-table th{
+        border:none;
+        padding:14px;
+        font-size:14px;
+        font-weight:600;
+    }
+
+    .custom-table td{
+        padding:14px;
+        vertical-align:middle;
+        border-color:#e5e7eb;
+        font-size:14px;
+    }
+
+    .status-badge{
+        padding:6px 12px;
+        border-radius:20px;
+        font-size:12px;
+        font-weight:600;
+    }
+
+    .badge-rented{
+        background:#facc15;
+        color:#000;
+    }
+
+    .badge-returned{
+        background:#16a34a;
+        color:#fff;
+    }
+
+    .badge-lost{
+        background:#dc2626;
+        color:#fff;
+    }
+
+    .fine-text{
+        color:#dc2626;
+        font-weight:700;
+    }
+
+</style>
+
+<div class="container history-container">
+
+    <h3 class="page-title">
+        All Users Rental History
+    </h3>
+
+ 
+    <div class="card history-card mb-4">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="row g-3">
+
+                   
+                    <div class="col-md-6">
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Search by username or book name..."
+                            value="{{ search|default:'' }}"
+                        >
+
+                    </div>
+
+                    <!-- STATUS FILTER -->
+                    <div class="col-md-3">
+
+                        <select
+                            name="status"
+                            class="form-control"
+                        >
+
+                            <option value="">
+                                All Status
+                            </option>
+
+                            <option value="rented"
+                                {% if status == 'rented' %}selected{% endif %}
+                            >
+                                Rented
+                            </option>
+
+                            <option value="returned"
+                                {% if status == 'returned' %}selected{% endif %}
+                            >
+                                Returned
+                            </option>
+
+                            <option value="lost"
+                                {% if status == 'lost' %}selected{% endif %}
+                            >
+                                Lost
+                            </option>
+
+                        </select>
+
+                    </div>
+
+            
+                    <div class="col-md-3 d-grid gap-2 d-md-flex">
+
+                        <button
+                            type="submit"
+                            class="btn btn-dark w-100"
+                        >
+                            Search
+                        </button>
+
+                        <a
+                            href="{% url 'all_rental_history' %}"
+                            class="btn btn-secondary w-100"
+                        >
+                            Reset
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div class="card history-card">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table custom-table text-center">
+
+                    <thead>
+
+                        <tr>
+                            <th>User</th>
+                            <th>Book</th>
+                            <th>Rent Date</th>
+                            <th>Due Date</th>
+                            <th>Return Date</th>
+                            <th>Status</th>
+                            <th>Rent Fee</th>
+                            <th>Fine</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for r in rentals %}
+
+                        <tr>
+
+                            <td>
+                                {{ r.user.username }}
+                            </td>
+
+                            <td>
+                                {{ r.book.title }}
+                            </td>
+
+                            <td>
+                                {{ r.rent_date }}
+                            </td>
+
+                            <td>
+                                {{ r.due_date }}
+                            </td>
+
+                            <td>
+                                {{ r.return_date|default:"-" }}
+                            </td>
+
+                            <td>
+
+                                {% if r.status == 'rented' %}
+
+                                    <span class="status-badge badge-rented">
+                                        Rented
+                                    </span>
+
+                                {% elif r.status == 'returned' %}
+
+                                    <span class="status-badge badge-returned">
+                                        Returned
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-badge badge-lost">
+                                        Lost
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                ₹{{ r.rent_fee }}
+                            </td>
+
+                            <td class="fine-text">
+                                ₹{{ r.current_fine }}
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="8">
+                                No rental history found
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

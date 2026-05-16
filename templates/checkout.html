@@ -1,0 +1,486 @@
+{% extends 'navcustm.html' %}
+{% load static %}
+
+{% block title %} Checkout {% endblock %}
+
+{% block content %}
+
+<style>  
+    .checkout-section{
+        padding-bottom:40px;
+    }  
+    .checkout-card,
+    .summary-card{
+        background:#ffffff;
+        border:none;
+        border-radius:22px;
+        box-shadow:0 10px 28px rgba(0,0,0,0.08);
+    }
+
+    .checkout-card{
+        padding:35px;
+    }
+
+    .summary-card{
+        padding:30px;
+    }
+
+    
+
+    .section-title{
+        font-size:30px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:28px;
+    }
+
+    .summary-title{
+        font-size:26px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:28px;
+    }
+
+    
+
+    .custom-label{
+        display:block;
+        margin-bottom:8px;
+        font-size:14px;
+        font-weight:600;
+        color:#475569;
+    }
+
+    
+
+    .custom-input,
+    .custom-textarea{
+        border:1px solid #dbe4ee;
+        border-radius:14px;
+        padding:14px 16px;
+        font-size:15px;
+        color:#0f172a;
+        background:#ffffff;
+        transition:0.3s;
+        box-shadow:none;
+    }
+
+    .custom-input{
+        height:52px;
+    }
+
+    .custom-textarea{
+        resize:none;
+    }
+
+    .custom-input:focus,
+    .custom-textarea:focus{
+        border-color:#0f172a;
+        box-shadow:none;
+        outline:none;
+    }
+
+   
+
+    .pay-btn{
+        height:56px;
+        border:none;
+        border-radius:14px;
+        background:#0f172a;
+        color:#ffffff;
+        font-size:17px;
+        font-weight:600;
+        transition:0.3s;
+        margin-top:10px;
+    }
+
+    .pay-btn:hover{
+        background:#1e293b;
+        color:#ffffff;
+    }
+
+    
+
+    .order-item{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:18px;
+        font-size:15px;
+        color:#334155;
+    }
+
+    .book-name{
+        font-weight:600;
+        color:#0f172a;
+    }
+
+    .book-price{
+        font-weight:600;
+        color:#0f172a;
+    }
+
+    
+
+    .summary-divider{
+        border-top:1px solid #e2e8f0;
+        margin:22px 0;
+    }
+
+    
+
+    .total-row{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+
+    .total-label{
+        font-size:18px;
+        font-weight:700;
+        color:#0f172a;
+    }
+
+    .total-price{
+        font-size:24px;
+        font-weight:700;
+        color:#0f172a;
+    }
+
+    
+
+    @media(max-width:991px){
+
+        .summary-card{
+            margin-top:25px;
+        }
+
+    }
+
+    @media(max-width:768px){
+
+        .checkout-card,
+        .summary-card{
+            padding:25px;
+        }
+
+        .section-title{
+            font-size:26px;
+        }
+
+        .summary-title{
+            font-size:22px;
+        }
+
+        .total-price{
+            font-size:22px;
+        }
+
+    }
+
+    @media(max-width:576px){
+
+        .checkout-card,
+        .summary-card{
+            padding:20px;
+            border-radius:18px;
+        }
+
+        .section-title{
+            font-size:24px;
+        }
+
+        .summary-title{
+            font-size:20px;
+        }
+
+        .custom-input,
+        .custom-textarea{
+            font-size:14px;
+        }
+
+        .pay-btn{
+            height:52px;
+            font-size:15px;
+        }
+
+        .order-item{
+            font-size:14px;
+        }
+
+        .total-label{
+            font-size:16px;
+        }
+
+        .total-price{
+            font-size:20px;
+        }
+
+    }
+
+</style>
+
+<div class="container mt-5 checkout-section">
+
+    <div class="row">
+
+        
+
+        <div class="col-lg-7">
+
+            <div class="card checkout-card">
+
+                <h3 class="section-title">
+
+                    Billing Details
+
+                </h3>
+
+                <form id="checkout-form">
+
+                    {% csrf_token %}
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="custom-label">
+
+                                Full Name
+
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control custom-input"
+                                value="{{ request.user.get_full_name }}"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="custom-label">
+
+                                Email
+
+                            </label>
+
+                            <input
+                                type="email"
+                                class="form-control custom-input"
+                                value="{{ request.user.email }}"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="custom-label">
+
+                            Address
+
+                        </label>
+
+                        <textarea
+                            class="form-control custom-textarea"
+                            rows="3"
+                            required
+                        ></textarea>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="custom-label">
+
+                                City
+
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control custom-input"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="custom-label">
+
+                                Pincode
+
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control custom-input"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        id="rzp-button"
+                        class="btn btn-block pay-btn"
+                    >
+
+                        Pay ₹{{ cart.get_grand_total }}
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-lg-5">
+
+            <div class="card summary-card">
+
+                <h4 class="summary-title">
+
+                    Order Summary
+
+                </h4>
+
+                {% for item in cart.items.all %}
+
+                <div class="order-item">
+
+                    <span class="book-name">
+
+                        {{ item.book.title }} × {{ item.quantity }}
+
+                    </span>
+
+                    <span class="book-price">
+
+                        ₹{{ item.get_total_price }}
+
+                    </span>
+
+                </div>
+
+                {% endfor %}
+
+                <div class="summary-divider"></div>
+
+                <div class="total-row">
+
+                    <strong class="total-label">
+
+                        Total
+
+                    </strong>
+
+                    <strong class="total-price">
+
+                        ₹{{ cart.get_grand_total }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+var options = {
+
+    "key": "{{ razorpay_key }}",
+
+    "amount": "{{ amount }}",
+
+    "currency": "INR",
+
+    "name": "Library Management",
+
+    "description": "Book Purchase",
+
+    "order_id": "{{ order_id }}",
+
+    "handler": function (response){
+
+        fetch("{% url 'book_payment_success' %}", {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+
+            },
+
+            body: JSON.stringify({
+
+                razorpay_payment_id: response.razorpay_payment_id,
+
+                razorpay_order_id: response.razorpay_order_id,
+
+                razorpay_signature: response.razorpay_signature
+
+            })
+
+        })
+
+        .then(res => res.json())
+
+        .then(data => {
+
+            if(data.status == "success"){
+
+                window.location.href = "/orders/payment-success/" + data.order_id + "/";
+
+            }else{
+
+                alert("Payment Failed");
+
+            }
+
+        });
+
+    },
+
+    "theme": {
+        "color": "#000000"
+    }
+
+};
+
+var rzp1 = new Razorpay(options);
+
+document.getElementById('rzp-button').onclick = function(e){
+
+    rzp1.open();
+
+    e.preventDefault();
+
+}
+
+</script>
+
+{% endblock %}

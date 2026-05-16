@@ -1,0 +1,289 @@
+{% extends 'navcustm.html' %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #f4f7f6;
+    }
+
+    .payment-section {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .payment-card {
+        border: none;
+        border-radius: 12px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .payment-card .card-body-custom {
+        padding: 35px;
+    }
+
+    .payment-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 30px;
+    }
+
+    .payment-info {
+        margin-bottom: 18px;
+        font-size: 16px;
+        color: #374151;
+    }
+
+    .payment-info strong {
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    .total-box {
+        background-color: #f8fafc;
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin-top: 20px;
+    }
+
+    .total-text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0;
+    }
+
+    .pay-btn {
+        background-color: #0f172a;
+        border: none;
+        border-radius: 8px;
+        height: 52px;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        margin-top: 25px;
+        transition: 0.3s ease;
+    }
+
+    .pay-btn:hover {
+        background-color: #1e293b;
+    }
+
+    hr {
+        border-top: 1px solid #e5e7eb;
+    }
+
+    @media (max-width: 767px) {
+
+        .payment-card .card-body-custom {
+            padding: 25px;
+        }
+
+        .payment-title {
+            font-size: 26px;
+        }
+
+        .payment-info {
+            font-size: 15px;
+        }
+
+        .total-text {
+            font-size: 22px;
+        }
+    }
+</style>
+
+<div class="container payment-section">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-6 col-md-8">
+
+            <div class="card payment-card">
+
+                <div class="card-body-custom">
+
+                    <h2 class="payment-title">
+                        Complete Payment
+                    </h2>
+
+                    <p class="payment-info">
+                        <strong>Book:</strong>
+                        {{ rental.book.title }}
+                    </p>
+
+                    <p class="payment-info">
+                        <strong>Rent Fee (7 Days):</strong>
+                        ₹{{ rental.rent_fee }}
+                    </p>
+
+                    <p class="payment-info">
+                        <strong>Fine:</strong>
+                        ₹{{ rental.current_fine }}
+                    </p>
+
+                    <hr>
+
+                    <div class="total-box">
+
+                        <h4 class="total-text">
+                            Total:
+                            ₹{{ rental.rent_fee|add:rental.current_fine }}
+                        </h4>
+
+                    </div>
+
+                    <button
+                        id="pay-btn"
+                        class="btn btn-dark pay-btn"
+                    >
+                        Pay with Razorpay
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+function getCookie(name) {
+
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== '') {
+
+        const cookies = document.cookie.split(';');
+
+        for (let i = 0; i < cookies.length; i++) {
+
+            let cookie = cookies[i].trim();
+
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+
+
+document.getElementById("pay-btn").onclick = function (e) {
+
+    e.preventDefault();
+
+    var options = {
+
+        "key": "{{ razorpay_key }}",
+
+        "amount": "{{ amount }}",
+
+        "currency": "INR",
+
+        "name": "Library Management System",
+
+        "description": "Rental Payment",
+
+        "order_id": "{{ order_id }}",
+
+        "handler": function (response) {
+
+            fetch("{% url 'payment_success' %}", {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type": "application/json",
+
+                    "X-CSRFToken": getCookie("csrftoken")
+
+                },
+
+                body: JSON.stringify({
+
+                    razorpay_payment_id: response.razorpay_payment_id,
+
+                    razorpay_order_id: response.razorpay_order_id,
+
+                    razorpay_signature: response.razorpay_signature,
+
+                    rental_id: "{{ rental.id }}"
+
+                })
+
+            })
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                console.log(data);
+
+                if (data.status === "success") {
+
+                    alert("Payment Successful");
+
+                    window.location.href = "{% url 'rental_history' %}";
+
+                }
+
+                else {
+
+                    alert("Payment Verification Failed");
+
+                }
+
+            })
+
+            .catch(error => {
+
+                console.log(error);
+
+                alert("Something went wrong");
+
+            });
+
+        },
+
+        "prefill": {
+
+            "name": "{{ request.user.username }}",
+
+            "email": "{{ request.user.email }}"
+
+        },
+
+        "theme": {
+
+            "color": "#000000"
+
+        }
+
+    };
+
+    var rzp1 = new Razorpay(options);
+
+    rzp1.open();
+
+};
+
+</script>
+
+{% endblock %}

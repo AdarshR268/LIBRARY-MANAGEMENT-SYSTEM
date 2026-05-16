@@ -1,0 +1,242 @@
+{% extends 'navcustm.html' %}
+{% load static %}
+
+{% block title %} My Orders {% endblock %}
+
+{% block content %}
+
+<style>
+
+    body{
+        background:#f8fafc;
+    }
+
+    .page-title{
+        font-size:34px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:30px;
+    }
+
+    .table-card{
+        border:none;
+        border-radius:20px;
+        overflow:hidden;
+        background:#ffffff;
+        box-shadow:0 10px 28px rgba(0,0,0,0.08);
+    }
+
+    .custom-table{
+        margin-bottom:0;
+    }
+
+    .custom-table thead{
+        background:#0f172a;
+    }
+
+    .custom-table thead th{
+        color:#ffffff;
+        border:none;
+        padding:18px 14px;
+        font-size:14px;
+        font-weight:600;
+        white-space:nowrap;
+        text-align:center;
+    }
+
+    .custom-table tbody td{
+        padding:18px 14px;
+        vertical-align:middle;
+        border-color:#edf2f7;
+        font-size:14px;
+        color:#334155;
+        text-align:center;
+    }
+
+    .book-name{
+        font-weight:700;
+        color:#0f172a;
+    }
+
+    .status-badge{
+        background:#22c55e;
+        color:#ffffff;
+        padding:7px 14px;
+        border-radius:30px;
+        font-size:12px;
+        font-weight:600;
+        display:inline-block;
+    }
+
+    .total-text{
+        font-weight:700;
+        color:#0f172a;
+    }
+
+    .empty-box{
+        background:#ffffff;
+        border-radius:20px;
+        padding:70px 20px;
+        text-align:center;
+        box-shadow:0 8px 22px rgba(0,0,0,0.06);
+    }
+
+    .empty-title{
+        color:#64748b;
+        font-size:22px;
+        font-weight:600;
+        margin-bottom:20px;
+    }
+
+    .browse-btn{
+        border:1px solid #0f172a;
+        color:#0f172a;
+        background:#ffffff;
+        border-radius:12px;
+        padding:10px 24px;
+        font-size:15px;
+        font-weight:600;
+        transition:0.3s;
+    }
+
+    .browse-btn:hover{
+        background:#0f172a;
+        color:#ffffff;
+    }
+
+    @media(max-width:768px){
+
+        .page-title{
+            font-size:28px;
+        }
+
+        .custom-table thead th,
+        .custom-table tbody td{
+            font-size:13px;
+            padding:14px 10px;
+        }
+    }
+
+    @media(max-width:576px){
+
+        .page-title{
+            font-size:24px;
+        }
+
+        .empty-title{
+            font-size:18px;
+        }
+    }
+
+</style>
+
+<div class="container mt-5">
+
+    <h3 class="page-title">
+        My Orders
+    </h3>
+
+    {% if orders %}
+
+    <div class="card table-card">
+
+        <div class="table-responsive">
+
+            <table class="table custom-table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Order ID</th>
+                        <th>Order Date</th>
+                        <th>Book Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for order in orders %}
+
+                        {% for item in order.items.all %}
+
+                        <tr>
+
+                            <td>
+                                #{{ order.id }}
+                            </td>
+
+                            <td>
+                                {{ order.created_at }}
+                            </td>
+
+                            <td class="book-name">
+                                {{ item.book.title }}
+                            </td>
+
+                            <td>
+                                ₹{{ item.price }}
+                            </td>
+
+                            <td>
+                                {{ item.quantity }}
+                            </td>
+
+                            <td class="total-text">
+                                ₹{% widthratio item.price 1 item.quantity %}
+                            </td>
+
+                            <td>
+
+                                <span class="status-badge">
+
+                                    {{ order.status|title }}
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-box">
+
+        <h5 class="empty-title">
+
+            No orders found
+
+        </h5>
+
+        <a href="{% url 'book_list' %}"
+           class="btn browse-btn">
+
+            Browse Books
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

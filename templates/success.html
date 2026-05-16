@@ -1,0 +1,251 @@
+{% extends 'navcustm.html' %}
+
+{% block content %}
+
+<style>
+
+
+
+    .success-wrapper{
+        padding-bottom:40px;
+    }
+
+
+
+    .success-card{
+        background:#ffffff;
+        border:none;
+        border-radius:24px;
+        padding:50px 40px;
+        box-shadow:0 12px 30px rgba(0,0,0,0.08);
+    }
+
+
+
+    .success-icon{
+        width:90px;
+        height:90px;
+        background:#16a34a;
+        color:#ffffff;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:38px;
+        font-weight:700;
+        margin:0 auto;
+        box-shadow:0 8px 18px rgba(22,163,74,0.25);
+    }
+
+
+
+    .success-title{
+        font-size:34px;
+        font-weight:700;
+        color:#0f172a;
+        margin-top:25px;
+        margin-bottom:15px;
+    }
+
+
+
+    .success-text{
+        color:#64748b;
+        font-size:16px;
+        line-height:1.7;
+        margin-bottom:30px;
+    }
+
+
+
+    .order-box{
+        background:#f8fafc;
+        border-radius:18px;
+        padding:25px;
+        margin-bottom:30px;
+    }
+
+    .order-id{
+        font-size:20px;
+        font-weight:600;
+        color:#0f172a;
+        margin-bottom:15px;
+    }
+
+    .order-price{
+        font-size:34px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:0;
+    }
+
+
+
+    .primary-btn{
+        height:54px;
+        border:none;
+        border-radius:14px;
+        background:#0f172a;
+        color:#ffffff;
+        font-size:16px;
+        font-weight:600;
+        transition:0.3s;
+    }
+
+    .primary-btn:hover{
+        background:#1e293b;
+        color:#ffffff;
+    }
+
+    .secondary-btn{
+        height:54px;
+        border:1px solid #0f172a;
+        border-radius:14px;
+        background:#ffffff;
+        color:#0f172a;
+        font-size:16px;
+        font-weight:600;
+        transition:0.3s;
+    }
+
+    .secondary-btn:hover{
+        background:#0f172a;
+        color:#ffffff;
+    }
+
+
+
+    @media(max-width:768px){
+
+        .success-card{
+            padding:40px 25px;
+        }
+
+        .success-title{
+            font-size:28px;
+        }
+
+        .order-price{
+            font-size:28px;
+        }
+
+    }
+
+    @media(max-width:576px){
+
+        .success-card{
+            padding:35px 20px;
+            border-radius:20px;
+        }
+
+        .success-icon{
+            width:80px;
+            height:80px;
+            font-size:32px;
+        }
+
+        .success-title{
+            font-size:24px;
+        }
+
+        .success-text{
+            font-size:14px;
+        }
+
+        .order-id{
+            font-size:18px;
+        }
+
+        .order-price{
+            font-size:24px;
+        }
+
+        .primary-btn,
+        .secondary-btn{
+            height:50px;
+            font-size:15px;
+        }
+
+    }
+
+</style>
+
+<div class="container mt-5 success-wrapper">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-6 col-md-8">
+
+            <div class="card success-card text-center">
+
+
+
+                <div class="success-icon">
+
+                    ✓
+
+                </div>
+
+
+
+                <h2 class="success-title">
+
+                    Payment Successful
+
+                </h2>
+
+
+
+                <p class="success-text">
+
+                    Your order has been placed successfully.
+
+                </p>
+
+
+
+                <div class="order-box">
+
+                    <h5 class="order-id">
+
+                        Order ID: #{{ order.id }}
+
+                    </h5>
+
+                    <h4 class="order-price">
+
+                        ₹{{ order.total_amount }}
+
+                    </h4>
+
+                </div>
+
+
+
+                <a
+                    href="{% url 'order_list' %}"
+                    class="btn btn-block primary-btn mb-3"
+                >
+
+                    View Orders
+
+                </a>
+
+                <a
+                    href="{% url 'base' %}"
+                    class="btn btn-block secondary-btn"
+                >
+
+                    Continue Shopping
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

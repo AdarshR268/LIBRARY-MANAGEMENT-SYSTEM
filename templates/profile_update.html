@@ -1,0 +1,385 @@
+{% extends 'navcustm.html' %}
+
+{% block title %} Update Profile {% endblock %}
+
+{% block content %}
+
+<style>
+
+
+
+    .custom-alert{
+        border:none;
+        border-radius:14px;
+        padding:15px 18px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.06);
+        font-size:15px;
+    }
+
+
+
+    .profile-card{
+        border:none;
+        border-radius:24px;
+        overflow:hidden;
+        background:#ffffff;
+        box-shadow:0 10px 28px rgba(0,0,0,0.08);
+    }
+
+    .profile-card-body{
+        padding:45px;
+    }
+
+
+
+    .profile-title{
+        font-size:34px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:35px;
+    }
+
+
+
+    .custom-label{
+        font-size:13px;
+        font-weight:700;
+        color:#64748b;
+        text-transform:uppercase;
+        letter-spacing:0.5px;
+        margin-bottom:8px;
+    }
+
+
+
+    .custom-input{
+        height:56px;
+        border-radius:14px;
+        border:1px solid #dbe3ea;
+        padding:0 16px;
+        font-size:15px;
+        transition:0.3s;
+        box-shadow:none !important;
+    }
+
+    .custom-input:focus{
+        border-color:#0f172a;
+    }
+
+
+
+    .custom-file{
+        border:1px solid #dbe3ea;
+        border-radius:14px;
+        padding:12px;
+        background:#ffffff;
+        font-size:14px;
+    }
+
+
+
+    .profile-image{
+        width:75px;
+        height:75px;
+        border-radius:50%;
+        object-fit:cover;
+        border:3px solid #ffffff;
+        box-shadow:0 4px 12px rgba(0,0,0,0.10);
+    }
+
+    .no-image{
+        color:#94a3b8;
+        font-size:14px;
+    }
+
+
+
+    .update-btn{
+        height:56px;
+        border:none;
+        border-radius:14px;
+        background:#0f172a;
+        color:#ffffff;
+        font-size:16px;
+        font-weight:600;
+        transition:0.3s;
+    }
+
+    .update-btn:hover{
+        background:#1e293b;
+        color:#ffffff;
+    }
+
+
+
+    @media(max-width:768px){
+
+        .profile-card-body{
+            padding:35px 28px;
+        }
+
+        .profile-title{
+            font-size:28px;
+        }
+    }
+
+    @media(max-width:576px){
+
+        .profile-card-body{
+            padding:28px 22px;
+        }
+
+        .profile-title{
+            font-size:24px;
+        }
+
+        .custom-input{
+            height:52px;
+            font-size:14px;
+        }
+
+        .update-btn{
+            height:52px;
+            font-size:15px;
+        }
+    }
+
+</style>
+
+<div class="container mt-4">
+
+
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-info text-center custom-alert mt-3">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-6 col-md-8">
+
+
+
+            <div class="card profile-card">
+
+                <div class="card-body profile-card-body">
+
+                    <h3 class="text-center profile-title">
+
+                        Update Account
+
+                    </h3>
+
+                    <form action="{% url 'profile_update' %}"
+                          method="post"
+                          enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+
+
+                        <div class="form-row">
+
+                            <div class="form-group col-md-6">
+
+                                <label class="custom-label">
+
+                                    First Name
+
+                                </label>
+
+                                <input type="text"
+                                       class="form-control custom-input"
+                                       name="fname"
+                                       value="{{ request.user.first_name }}"
+                                       required>
+
+                            </div>
+
+                            <div class="form-group col-md-6">
+
+                                <label class="custom-label">
+
+                                    Last Name
+
+                                </label>
+
+                                <input type="text"
+                                       class="form-control custom-input"
+                                       name="lname"
+                                       value="{{ request.user.last_name }}"
+                                       required>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <label class="custom-label">
+
+                                Username
+
+                            </label>
+
+                            <input type="text"
+                                   class="form-control custom-input"
+                                   name="uname"
+                                   value="{{ request.user.username }}"
+                                   required>
+
+                        </div>
+
+
+
+                        <div class="form-row">
+
+                            <div class="form-group col-md-4">
+
+                                <label class="custom-label">
+
+                                    Age
+
+                                </label>
+
+                                <input type="number"
+                                       class="form-control custom-input"
+                                       name="age"
+                                       value="{{ request.user.Age }}"
+                                       required>
+
+                            </div>
+
+                            <div class="form-group col-md-8">
+
+                                <label class="custom-label">
+
+                                    Phone Number
+
+                                </label>
+
+                                <input type="text"
+                                       class="form-control custom-input"
+                                       name="phone"
+                                       value="{{ request.user.Phone_number }}"
+                                       required>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group mb-3">
+
+                            <label class="custom-label">
+
+                                Email Address
+
+                            </label>
+
+                            <input type="email"
+                                   class="form-control custom-input"
+                                   name="email"
+                                   value="{{ request.user.email }}"
+                                   required>
+
+                        </div>
+
+
+
+                        <div class="form-group mb-3">
+
+                            <label class="custom-label">
+
+                                Address
+
+                            </label>
+
+                            <input type="text"
+                                   class="form-control custom-input"
+                                   name="address"
+                                   value="{{ request.user.address }}"
+                                   required>
+
+                        </div>
+
+
+
+                        <div class="form-group mb-3">
+
+                            <label class="custom-label d-block">
+
+                                Current Profile Picture
+
+                            </label>
+
+                            {% if request.user.image %}
+
+                                <img src="{{ request.user.image.url }}"
+                                     class="profile-image"
+                                     alt="Profile Image">
+
+                            {% else %}
+
+                                <p class="no-image mb-0">
+
+                                    No image set
+
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <div class="form-group mb-4">
+
+                            <label class="custom-label">
+
+                                Change Image
+
+                            </label>
+
+                            <input type="file"
+                                   class="form-control-file custom-file"
+                                   name="image"
+                                   accept="image/*">
+
+                        </div>
+
+
+
+                        <button type="submit"
+                                class="btn btn-block update-btn">
+
+                            Update Profile
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

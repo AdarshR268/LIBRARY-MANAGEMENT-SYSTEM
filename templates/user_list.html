@@ -1,0 +1,282 @@
+{% extends 'navadmin.html' %}
+
+{% block title %} User Details {% endblock %}
+
+{% block content %}
+
+<style>
+
+    .page-title{
+        font-size:34px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:35px;
+    }
+
+    .custom-alert{
+        border:none;
+        border-radius:12px;
+        padding:14px 18px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.06);
+        font-size:15px;
+    }
+
+    .table-wrapper{
+        background:#ffffff;
+        border-radius:18px;
+        box-shadow:0 6px 20px rgba(0,0,0,0.06);
+
+        overflow-x:auto;
+        overflow-y:hidden;
+
+        -webkit-overflow-scrolling:touch;
+        width:100%;
+    }
+
+    .custom-table{
+        margin-bottom:0;
+        min-width:900px;
+    }
+
+    .custom-table thead{
+        background:#0f172a;
+        color:#ffffff;
+    }
+
+    .custom-table thead th{
+        border:none;
+        padding:18px 14px;
+        font-size:15px;
+        font-weight:600;
+        vertical-align:middle;
+        white-space:nowrap;
+    }
+
+    .custom-table tbody td{
+        padding:18px 14px;
+        vertical-align:middle;
+        border-color:#e2e8f0;
+        font-size:15px;
+        color:#334155;
+        white-space:nowrap;
+    }
+
+    .custom-table tbody tr{
+        transition:0.3s;
+    }
+
+    .custom-table tbody tr:hover{
+        background:#f8fafc;
+    }
+
+    .user-image{
+        width:50px;
+        height:50px;
+        border-radius:50%;
+        object-fit:cover;
+        box-shadow:0 3px 8px rgba(0,0,0,0.1);
+    }
+
+    .no-image{
+        color:#94a3b8;
+        font-size:13px;
+    }
+
+    .user-link{
+        color:#0f172a;
+        font-weight:600;
+        text-decoration:none;
+        transition:0.3s;
+    }
+
+    .user-link:hover{
+        color:#334155;
+        text-decoration:none;
+    }
+
+    .delete-btn{
+        border:1px solid #dc2626;
+        color:#dc2626;
+        background:#ffffff;
+        border-radius:10px;
+        padding:7px 16px;
+        font-size:14px;
+        font-weight:600;
+        transition:0.3s;
+    }
+
+    .delete-btn:hover{
+        background:#dc2626;
+        color:#ffffff;
+    }
+
+    .action-group{
+        display:flex;
+        gap:8px;
+        justify-content:center;
+    }
+
+    .empty-box{
+        background:#ffffff;
+        border-radius:18px;
+        padding:60px 20px;
+        text-align:center;
+        box-shadow:0 6px 18px rgba(0,0,0,0.06);
+    }
+
+    .empty-title{
+        color:#64748b;
+        font-size:24px;
+        font-weight:600;
+    }
+
+    @media(max-width:768px){
+
+        .page-title{
+            font-size:28px;
+        }
+
+        .custom-table thead th,
+        .custom-table tbody td{
+            font-size:14px;
+            padding:12px 10px;
+        }
+
+        .action-group{
+            flex-direction:column;
+        }
+
+        .delete-btn{
+            width:100%;
+        }
+    }
+
+    @media(max-width:576px){
+
+        .page-title{
+            font-size:24px;
+        }
+
+        .user-image{
+            width:40px;
+            height:40px;
+        }
+
+        .custom-table{
+            min-width:850px;
+        }
+    }
+
+</style>
+
+<div class="container mt-5">
+
+    {% for msg in messages %}
+        <div class="alert alert-success text-center custom-alert">
+            {{ msg }}
+        </div>
+    {% endfor %}
+
+    <h3 class="text-center page-title">
+        User Details
+    </h3>
+
+    {% if users %}
+
+    <div class="table-wrapper">
+
+        <table class="table custom-table text-center">
+
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Age</th>
+                    <th>Phone</th>
+                    <th>Image</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for u in users %}
+
+                <tr>
+
+                    <td>
+                        <a href="{% url 'user_history' u.id %}"
+                           class="user-link">
+                            {{ u.first_name }} {{ u.last_name }}
+                        </a>
+                    </td>
+
+                    <td>{{ u.address }}</td>
+
+                    <td>{{ u.email }}</td>
+
+                    <td>{{ u.Age }}</td>
+
+                    <td>{{ u.Phone_number }}</td>
+
+                    <td>
+                        {% if u.image %}
+                            <img src="{{ u.image.url }}"
+                                 class="user-image"
+                                 alt="{{ u.first_name }}">
+                        {% else %}
+                            <span class="no-image">
+                                No Image
+                            </span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <div class="action-group">
+
+                            <form action="{% url 'delete_user' u.id %}"
+                                  method="POST">
+
+                                {% csrf_token %}
+
+                                <button type="submit"
+                                        class="btn delete-btn"
+                                        onclick="return confirm('Delete this user?');">
+
+                                    Delete
+
+                                </button>
+
+                            </form>
+
+                        </div>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-box">
+
+        <h5 class="empty-title">
+
+            No users available
+
+        </h5>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,285 @@
+{% extends 'navadmin.html' %}
+
+{% block title %} User History {% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #f4f7f6;
+    }
+
+    .history-container {
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+
+    .page-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 25px;
+    }
+
+    .history-card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #ffffff;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+    }
+
+    .history-card .card-body {
+        padding: 25px;
+    }
+
+    .section-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 20px;
+    }
+
+    .custom-table {
+        margin-bottom: 0;
+    }
+
+    .custom-table thead {
+        background-color: #0f172a;
+        color: #ffffff;
+    }
+
+    .custom-table th {
+        border: none;
+        padding: 14px;
+        font-size: 14px;
+        font-weight: 600;
+        vertical-align: middle;
+    }
+
+    .custom-table td {
+        padding: 14px;
+        vertical-align: middle;
+        border-color: #e5e7eb;
+        font-size: 14px;
+        color: #374151;
+    }
+
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .badge-rented {
+        background-color: #facc15;
+        color: #000000;
+    }
+
+    .badge-returned {
+        background-color: #16a34a;
+        color: #ffffff;
+    }
+
+    .badge-lost {
+        background-color: #dc2626;
+        color: #ffffff;
+    }
+
+    .fine-text {
+        font-weight: 700;
+        color: #dc2626;
+    }
+
+    .empty-text {
+        color: #6b7280;
+        font-size: 15px;
+    }
+
+    @media (max-width: 767px) {
+
+        .page-title {
+            font-size: 26px;
+        }
+
+        .section-title {
+            font-size: 20px;
+        }
+
+        .history-card .card-body {
+            padding: 18px;
+        }
+
+        .custom-table th,
+        .custom-table td {
+            font-size: 13px;
+            padding: 10px;
+        }
+    }
+</style>
+
+<div class="container history-container">
+
+    <h3 class="page-title">
+        {{ user_obj.first_name }} {{ user_obj.last_name }} - History
+    </h3>
+
+    
+    <div class="card history-card">
+
+        <div class="card-body">
+
+            <h5 class="section-title">
+                Rental History
+            </h5>
+
+            <div class="table-responsive">
+
+                <table class="table custom-table text-center">
+
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Rent Date</th>
+                            <th>Due Date</th>
+                            <th>Return Date</th>
+                            <th>Status</th>
+                            <th>Fine</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for r in rentals %}
+                        <tr>
+
+                            <td>
+                                {{ r.book.title }}
+                            </td>
+
+                            <td>
+                                {{ r.rent_date }}
+                            </td>
+
+                            <td>
+                                {{ r.due_date }}
+                            </td>
+
+                            <td>
+                                {{ r.return_date|default:"-" }}
+                            </td>
+
+                            <td>
+
+                                {% if r.status == 'rented' %}
+                                    <span class="status-badge badge-rented">
+                                        Rented
+                                    </span>
+
+                                {% elif r.status == 'returned' %}
+                                    <span class="status-badge badge-returned">
+                                        Returned
+                                    </span>
+
+                                {% else %}
+                                    <span class="status-badge badge-lost">
+                                        Lost
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+                            <td class="fine-text">
+                                ₹{{ r.current_fine }}
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="empty-text">
+                                No rentals
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+  
+    <div class="card history-card">
+
+        <div class="card-body">
+
+            <h5 class="section-title">
+                Purchase History
+            </h5>
+
+            <div class="table-responsive">
+
+                <table class="table custom-table text-center">
+
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for o in orders %}
+                        <tr>
+
+                            <td>
+                                #{{ o.id }}
+                            </td>
+
+                            <td>
+                                ₹{{ o.total_amount }}
+                            </td>
+
+                            <td>
+                                {{ o.status }}
+                            </td>
+
+                            <td>
+                                {{ o.created_at }}
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="empty-text">
+                                No orders
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

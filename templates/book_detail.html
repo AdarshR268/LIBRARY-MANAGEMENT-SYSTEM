@@ -1,0 +1,391 @@
+{% extends 'navcustm.html' %}
+{% load static %}
+
+{% block title %} {{ book.title }} - Details {% endblock %}
+
+{% block content %}
+
+<style>
+    .book-image-card,
+    .detail-card {
+        border: none;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+
+    .book-cover {
+        width: 100%;
+        height: 520px;
+        object-fit: cover;
+    }
+
+    .detail-title {
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .book-author {
+        color: #64748b;
+        font-size: 1.05rem;
+    }
+
+    .price-tag {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .stock-badge {
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .info-box {
+        background: #f8fafc;
+        border-radius: 14px;
+        padding: 18px;
+        height: 100%;
+    }
+
+    .action-card {
+        border: none;
+        border-radius: 18px;
+        padding: 25px;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    }
+
+    .btn-custom-dark {
+        background: #0f172a;
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        border-radius: 12px;
+        padding: 12px;
+        transition: 0.3s ease;
+    }
+
+    .btn-custom-dark:hover {
+        background: #1e293b;
+        color: #ffffff;
+    }
+
+    .btn-rent {
+        background: #facc15;
+        border: none;
+        color: #000;
+        font-weight: 600;
+        border-radius: 12px;
+        padding: 12px;
+        transition: 0.3s ease;
+    }
+
+    .btn-rent:hover {
+        background: #eab308;
+        color: #000;
+    }
+
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+    }
+
+    .breadcrumb-item a {
+        color: #0f172a;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+
+        .book-cover {
+            height: 400px;
+        }
+
+        .price-tag {
+            font-size: 1.6rem;
+        }
+
+        .detail-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="container py-5">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info text-center shadow-sm rounded-pill">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+
+        
+        <div class="col-lg-5 mb-4">
+
+            <div class="book-image-card">
+
+                {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}"
+                         alt="{{ book.title }}"
+                         class="book-cover">
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center bg-light"
+                         style="height:520px;">
+                        <span class="text-muted">
+                            No Cover Image
+                        </span>
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        
+        <div class="col-lg-7">
+
+            <div class="detail-card p-4 p-lg-5">
+
+                
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'base' %}">
+                                Library
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            Book Detail
+                        </li>
+                    </ol>
+                </nav>
+
+                
+                <h1 class="detail-title mb-2">
+                    {{ book.title }}
+                </h1>
+
+                <p class="book-author mb-4">
+                    By {{ book.author }}
+                </p>
+
+                
+                <div class="d-flex flex-wrap align-items-center mb-4">
+
+                    <div class="price-tag mr-4 mb-2">
+                        ₹{{ book.price }}
+                    </div>
+
+                    {% if book.available_stock > 0 %}
+                        <span class="badge badge-success stock-badge mb-2">
+                            In Stock
+                        </span>
+                    {% else %}
+                        <span class="badge badge-danger stock-badge mb-2">
+                            Out of Stock
+                        </span>
+                    {% endif %}
+
+                </div>
+
+                <hr>
+
+                
+                <div class="mb-4">
+
+                    <h5 class="font-weight-bold mb-3">
+                        Description
+                    </h5>
+
+                    <p class="text-muted" style="line-height: 1.8;">
+                        {{ book.description|default:"No description available"|linebreaks }}
+                    </p>
+
+                </div>
+
+                
+                <div class="row mb-4">
+
+                    <div class="col-md-6 mb-3">
+                        <div class="info-box">
+
+                            <small class="text-muted d-block mb-2">
+                                Publisher
+                            </small>
+
+                            <div class="font-weight-bold">
+                                {{ book.publisher|default:"N/A" }}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="info-box">
+
+                            <small class="text-muted d-block mb-2">
+                                Available Copies
+                            </small>
+
+                            <div class="font-weight-bold">
+                                <span id="available-stock-display">
+                                    {{ book.available_stock }}
+                                </span>
+                                copies
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                
+                <div class="action-card bg-light mb-4">
+
+                    <form action="{% url 'add_to_cart' book.id %}" method="POST">
+
+                        {% csrf_token %}
+
+                        <div class="row align-items-end">
+
+                            <div class="col-md-4 mb-3 mb-md-0">
+
+                                <label class="font-weight-bold small">
+                                    Quantity
+                                </label>
+
+                                <input type="number"
+                                       id="quantity-input"
+                                       name="quantity"
+                                       class="form-control"
+                                       value="1"
+                                       min="1"
+                                       max="{{ book.available_stock }}">
+
+                            </div>
+
+                            <div class="col-md-8">
+
+                                {% if book.available_stock > 0 %}
+
+                                    <button type="submit"
+                                            class="btn btn-custom-dark btn-block btn-lg">
+                                        Add to Cart
+                                    </button>
+
+                                {% else %}
+
+                                    <button class="btn btn-secondary btn-block btn-lg"
+                                            disabled>
+                                        Out of Stock
+                                    </button>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+                
+                <div class="action-card"
+                     style="background: #fef9c3;">
+
+                    <h5 class="font-weight-bold mb-3">
+                         Rent this Book
+                    </h5>
+
+                    {% if already_rented %}
+
+                        <button class="btn btn-secondary btn-lg btn-block"
+                                disabled>
+                            Already Rented
+                        </button>
+
+                    {% elif book.available_stock > 0 %}
+
+                        <form action="{% url 'rent_book' book.id %}" method="POST">
+
+                            {% csrf_token %}
+
+                            <button type="submit"
+                                    class="btn btn-rent btn-lg btn-block">
+                                Rent for 7 Days
+                            </button>
+
+                        </form>
+
+                        <small class="text-muted d-block mt-3">
+                            Return within 7 days to avoid late fees.
+                        </small>
+
+                    {% else %}
+
+                        <button class="btn btn-secondary btn-lg btn-block"
+                                disabled>
+                            Not Available for Rent
+                        </button>
+
+                    {% endif %}
+
+                </div>
+
+                
+                <div class="mt-4">
+
+                    <a href="{% url 'base' %}"
+                       class="text-dark font-weight-bold">
+                        ← Back to Collection
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const totalStock = parseInt("{{ book.available_stock }}") || 0;
+
+    const quantityInput = document.getElementById('quantity-input');
+
+    const stockDisplay = document.getElementById('available-stock-display');
+
+    if (quantityInput && stockDisplay) {
+
+        function updateStockDisplay() {
+
+            const selectedQty = parseInt(quantityInput.value) || 0;
+
+            const remaining = totalStock - selectedQty;
+
+            stockDisplay.innerText = remaining >= 0 ? remaining : 0;
+        }
+
+        quantityInput.addEventListener('input', updateStockDisplay);
+
+        quantityInput.addEventListener('change', updateStockDisplay);
+
+        updateStockDisplay();
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,259 @@
+{% extends 'navbar.html' %}
+{% block title %} Teacher Sign Up {% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #f4f7f6;
+    }
+
+    .signup-wrapper {
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+
+    .signup-card {
+        border: none;
+        border-radius: 12px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .signup-card .card-body {
+        padding: 40px;
+    }
+
+    .signup-title {
+        text-align: center;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 30px;
+    }
+
+    .form-label-custom {
+        font-weight: 600;
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
+    .custom-input {
+        height: 50px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        box-shadow: none;
+        font-size: 15px;
+    }
+
+    .custom-input:focus {
+        border-color: #0f172a;
+        box-shadow: none;
+    }
+
+    .custom-file {
+        font-size: 14px;
+    }
+
+    .signup-btn {
+        background-color: #0f172a;
+        border: none;
+        height: 52px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: 0.3s ease;
+    }
+
+    .signup-btn:hover {
+        background-color: #1e293b;
+    }
+
+    .alert-custom {
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    @media (max-width: 767px) {
+
+        .signup-card .card-body {
+            padding: 25px;
+        }
+
+        .signup-title {
+            font-size: 28px;
+        }
+
+        .custom-input {
+            height: 46px;
+        }
+    }
+</style>
+
+<div class="container signup-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+
+            {% if messages %}
+            <div class="alert alert-info alert-dismissible fade show alert-custom" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+
+                {% for message in messages %}
+                    {{ message }}<br>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="card signup-card">
+                <div class="card-body">
+
+                    <h3 class="signup-title">
+                        Sign Up
+                    </h3>
+
+                    <form action="{% url 'user_sign' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="form-row">
+
+                            <div class="form-group col-md-6">
+                                <label class="form-label-custom">
+                                    First Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control custom-input"
+                                    placeholder="First Name"
+                                    name="fname"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label class="form-label-custom">
+                                    Last Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control custom-input"
+                                    placeholder="Last Name"
+                                    name="lname"
+                                    required
+                                >
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label-custom">
+                                Username
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control custom-input"
+                                placeholder="Username"
+                                name="uname"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-row">
+
+                            <div class="form-group col-md-4">
+                                <label class="form-label-custom">
+                                    Age
+                                </label>
+
+                                <input
+                                    type="number"
+                                    class="form-control custom-input"
+                                    placeholder="Age"
+                                    name="age"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group col-md-8">
+                                <label class="form-label-custom">
+                                    Phone Number
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control custom-input"
+                                    placeholder="Phone Number"
+                                    name="phone"
+                                    title="Please enter a valid 10 digit number"
+                                    pattern="[0-9]{10}"
+                                    required
+                                >
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label-custom">
+                                Email Address
+                            </label>
+
+                            <input
+                                type="email"
+                                class="form-control custom-input"
+                                placeholder="Email Address"
+                                name="email"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label-custom">
+                                Address
+                            </label>
+
+                            <input
+                                type="text"
+                                id="address"
+                                class="form-control custom-input"
+                                placeholder="Address"
+                                name="address"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label class="form-label-custom">
+                                Upload Image
+                            </label>
+
+                            <input
+                                type="file"
+                                id="image"
+                                class="form-control-file custom-file"
+                                name="image"
+                                accept="image/*"
+                                required
+                            >
+                        </div>
+
+                        <input type="hidden" name="usr" value="0">
+
+                        <button
+                            type="submit"
+                            class="btn btn-dark btn-block signup-btn"
+                        >
+                            Sign Up
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

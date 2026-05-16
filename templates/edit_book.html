@@ -1,0 +1,317 @@
+{% extends 'navadmin.html' %}
+
+{% block title %} Admin - Edit Book {% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #f4f7f6;
+    }
+
+    .edit-book-container {
+        max-width: 650px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .edit-card {
+        background-color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .edit-card-body {
+        padding: 35px;
+    }
+
+    .page-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0f172a;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .form-label-custom {
+        font-weight: 600;
+        color: #475569;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .custom-input,
+    .custom-textarea {
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        box-shadow: none;
+        font-size: 15px;
+    }
+
+    .custom-input {
+        height: 48px;
+    }
+
+    .custom-input:focus,
+    .custom-textarea:focus {
+        border-color: #0f172a;
+        box-shadow: none;
+    }
+
+    .cover-preview {
+        width: 100px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        padding: 4px;
+        background-color: #ffffff;
+    }
+
+    .no-image-text {
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    .save-btn {
+        background-color: #0f172a;
+        border: none;
+        height: 50px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: 0.3s ease;
+    }
+
+    .save-btn:hover {
+        background-color: #1e293b;
+    }
+
+    .cancel-btn {
+        height: 50px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    @media (max-width: 767px) {
+
+        .edit-card-body {
+            padding: 25px;
+        }
+
+        .page-title {
+            font-size: 26px;
+        }
+
+        .custom-input {
+            height: 45px;
+        }
+    }
+</style>
+
+<div class="container edit-book-container">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card edit-card">
+
+        <div class="edit-card-body">
+
+            <h2 class="page-title">
+                Edit Book Details
+            </h2>
+
+            <form action="{% url 'edit_book' book.id %}" method="POST" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+
+                <div class="form-group mb-3">
+
+                    <label for="title" class="form-label-custom">
+                        Book Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        class="form-control custom-input"
+                        name="title"
+                        value="{{ book.title }}"
+                        required
+                    >
+
+                </div>
+
+                <div class="row">
+
+
+                    <div class="col-md-6 form-group mb-3">
+
+                        <label for="author" class="form-label-custom">
+                            Author
+                        </label>
+
+                        <input
+                            type="text"
+                            id="author"
+                            class="form-control custom-input"
+                            name="author"
+                            value="{{ book.author }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6 form-group mb-3">
+
+                        <label for="publisher" class="form-label-custom">
+                            Publisher
+                        </label>
+
+                        <input
+                            type="text"
+                            id="publisher"
+                            class="form-control custom-input"
+                            name="publisher"
+                            value="{{ book.publisher }}"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+
+                    <div class="col-md-6 form-group mb-3">
+
+                        <label for="price" class="form-label-custom">
+                            Price (₹)
+                        </label>
+
+                        <input
+                            type="number"
+                            step="0.01"
+                            id="price"
+                            class="form-control custom-input"
+                            name="price"
+                            value="{{ book.price }}"
+                            required
+                            min="0"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6 form-group mb-3">
+
+                        <label for="stock" class="form-label-custom">
+                            Stock Quantity
+                        </label>
+
+                        <input
+                            type="number"
+                            id="stock"
+                            class="form-control custom-input"
+                            name="stock"
+                            value="{{ book.available_stock }}"
+                            required
+                            min="0"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group mb-3">
+
+                    <label for="description" class="form-label-custom">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        class="form-control custom-textarea"
+                        name="description"
+                        rows="4"
+                        required
+                    >{{ book.description }}</textarea>
+
+                </div>
+
+
+                <div class="form-group mb-3">
+
+                    <label class="form-label-custom d-block">
+                        Current Cover
+                    </label>
+
+                    {% if book.cover_image %}
+
+                        <img
+                            src="{{ book.cover_image.url }}"
+                            class="cover-preview"
+                            alt="Cover"
+                        >
+
+                    {% else %}
+
+                        <p class="no-image-text">
+                            No cover image uploaded
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="form-group mb-4">
+
+                    <label for="cover_image" class="form-label-custom">
+                        Update Cover Image (optional)
+                    </label>
+
+                    <input
+                        type="file"
+                        id="cover_image"
+                        class="form-control-file"
+                        name="cover_image"
+                        accept="image/*"
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-dark btn-block save-btn"
+                >
+                    Save Changes
+                </button>
+
+                <a
+                    href="{% url 'admin_book_list' %}"
+                    class="btn btn-outline-secondary btn-block cancel-btn mt-3"
+                >
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
