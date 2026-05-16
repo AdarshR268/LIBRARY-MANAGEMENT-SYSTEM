@@ -162,33 +162,7 @@ def user_sign(request):
 
 
 def aboutus(request):
-    return render(request, 'aboutus.html')
-
-
-
-# @login_required(login_url='loginpage')
-# def approvalpage(request):
-#     usr=CustomUser.objects.filter(~Q(is_staff=1))
-#     return render(request,'approvalpage.html',{'user':usr})
-
-
-# def approve(request,id):
-#     usr=CustomUser.objects.get(id=id)
-#     if usr.is_staff == 0:
-#         usr.status='1'
-#         usr.save()
-#         user1=CustomUser.objects.get(id=id)
-#         pas=str(random.randint(100000,999999))
-#         user1.set_password(pas)
-#         user1.save()
-#         tuser=usr.username
-#         uemail=usr.email
-#         subject='Admin approved'
-#         message='username:'+str(tuser)+"\n"+'password:'+str(pas)+"\n"+'email:'+str(uemail)
-#         send_mail(subject,message,settings.EMAIL_HOST_USER,{usr.email})
-#         messages.info(request,'User approved')
-#         return redirect('approvalpage')
-    
+    return render(request, 'aboutus.html')  
 
 
 @login_required(login_url='loginpage')
@@ -252,17 +226,7 @@ def disapprove(request, id):
         messages.info(request,'User disapproved.')
     return redirect('approvalpage')
 
-# def disapprove(request,id):
-#     usr=CustomUser.objects.get(id=id)
-#     if usr.is_staff == 0:
-#         usr.status='2'
-#         usr.save()
-#         subject = 'Registration Disapproved'
-#         message = 'Your registration has been disapproved by the admin.'
-#         send_mail(subject,"Hello "+usr.username+","+ message,settings.EMAIL_HOST_USER,[usr.email])
-#         messages.info(request,'User Disapproved')
-#         return redirect('approvalpage')
-    
+
 
 @login_required(login_url='loginpage')
 def resetpage(request):
